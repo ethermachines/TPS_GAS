@@ -9,6 +9,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Engine/SkeletalMeshSocket.h"
+#include "Weapon.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -63,6 +65,27 @@ void ATPS_GASCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+
+	SpawnDefaultWeapon();
+}
+
+void ATPS_GASCharacter::SpawnDefaultWeapon()
+{
+	//set weapon in blueprint first
+	if (DefaultWeaponClass)
+	{
+		//spawn weapon in world
+		AWeapon* DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
+
+		const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(FName("RightHandSocket"));
+
+		if (HandSocket)
+		{
+			HandSocket->AttachActor(DefaultWeapon, GetMesh());
+		}
+
+		EquippedWeapon = DefaultWeapon;
 	}
 }
 

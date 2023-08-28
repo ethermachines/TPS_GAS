@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "TPS_GASCharacter.generated.h"
 
+class AWeapon;
 
 UCLASS(config=Game)
 class ATPS_GASCharacter : public ACharacter
@@ -56,6 +56,21 @@ protected:
 	
 	// To add mapping context
 	virtual void BeginPlay();
+
+protected:
+
+	//Spawn weapon in right hand socket
+	void SpawnDefaultWeapon();
+
+private:
+
+	//Equipped Weapon
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	AWeapon* EquippedWeapon;
+
+	//Set default weapon in blueprint
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AWeapon> DefaultWeaponClass;
 
 public:
 	/** Returns CameraBoom subobject **/
