@@ -11,6 +11,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Weapon.h"
+#include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,8 +52,11 @@ ATPS_GASCharacter::ATPS_GASCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	CameraDefaultFOV = 0.0f;
+	CameraZoomedFOV = 50.0f;
+	CameraCurrentFOV = 0.f;
+	ZoomInterpSpeed = 20.f;
+
 }
 
 void ATPS_GASCharacter::BeginPlay()
@@ -67,36 +73,24 @@ void ATPS_GASCharacter::BeginPlay()
 		}
 	}
 
-	SpawnDefaultWeapon();
-}
-
-void ATPS_GASCharacter::SpawnDefaultWeapon()
-{
-	//set weapon in blueprint first
-	if (DefaultWeaponClass)
+	if (FollowCamera)
 	{
-		//spawn weapon in world
-		AWeapon* DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
-
-		const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(FName("RightHandSocket"));
-
-		if (HandSocket)
-		{
-			HandSocket->AttachActor(DefaultWeapon, GetMesh());
-		}
-
-		EquippedWeapon = DefaultWeapon;
+		CameraDefaultFOV = GetFollowCamera()->FieldOfView;
+		CameraCurrentFOV = CameraDefaultFOV;
 	}
+
+	SpawnDefaultWeapon();
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Input
 
+
 void ATPS_GASCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
+
 		//Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -107,9 +101,25 @@ void ATPS_GASCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATPS_GASCharacter::Look);
 
+		//Firing
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATPS_GASCharacter::FireWeapon);
+
+		//Aiming
+		EnhancedInputComponent->BindAction(AimingAction, ETriggerEvent::Triggered, this, &ATPS_GASCharacter::AimingButtonPressed);
+		EnhancedInputComponent->BindAction(AimingAction, ETriggerEvent::Completed, this, &ATPS_GASCharacter::AimingButtonReleased);
+
 	}
 
 }
+
+void ATPS_GASCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	//Interpolate FOV when Aiming
+	CameraInterpZoom(DeltaTime);
+}
+
 
 void ATPS_GASCharacter::Move(const FInputActionValue& Value)
 {
@@ -124,7 +134,7 @@ void ATPS_GASCharacter::Move(const FInputActionValue& Value)
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
+
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
@@ -147,6 +157,139 @@ void ATPS_GASCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void ATPS_GASCharacter::AimingButtonPressed()
+{
+	bAiming = true;
+}
 
+void ATPS_GASCharacter::AimingButtonReleased()
+{
+	bAiming = false;
+}
+
+void ATPS_GASCharacter::CameraInterpZoom(float DeltaTime)
+{
+	// Set current camera field of view
+	if (bAiming)
+	{
+		// Interpolate to zoomed FOV
+		CameraCurrentFOV = FMath::FInterpTo(
+			CameraCurrentFOV,
+			CameraZoomedFOV,
+			DeltaTime,
+			ZoomInterpSpeed);
+	}
+	else
+	{
+		// Interpolate to default FOV
+		CameraCurrentFOV = FMath::FInterpTo(
+			CameraCurrentFOV,
+			CameraDefaultFOV,
+			DeltaTime,
+			ZoomInterpSpeed);
+	}
+	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV);
+}
+
+
+void ATPS_GASCharacter::SpawnDefaultWeapon()
+{
+	//set weapon in blueprint first
+	if (DefaultWeaponClass)
+	{
+		//spawn weapon in world
+		AWeapon* DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
+
+		const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(FName("RightHandSocket"));
+
+		if (HandSocket)
+		{
+			HandSocket->AttachActor(DefaultWeapon, GetMesh());
+		}
+
+		EquippedWeapon = DefaultWeapon;
+	}
+}
+
+
+
+void ATPS_GASCharacter::FireWeapon()
+{
+	const USkeletalMeshSocket* BarrelSocket = GetMesh()->GetSocketByName("BarrelSocket");
+	if (BarrelSocket)
+	{
+		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
+		FVector BeamEnd;
+
+		bool bBeamEnd = GetBeamEndLocation(SocketTransform.GetLocation(), BeamEnd);
+
+		if (bBeamEnd)
+		{
+
+		}
+
+	}
+}
+
+bool ATPS_GASCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation)
+{
+	// Get current size of the viewport
+	FVector2D ViewportSize;
+	if (GEngine && GEngine->GameViewport)
+	{
+		GEngine->GameViewport->GetViewportSize(ViewportSize);
+	}
+
+	// Get screen space location of crosshairs
+	FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
+	CrosshairLocation.Y -= 50.f;
+	FVector CrosshairWorldPosition;
+	FVector CrosshairWorldDirection;
+
+	// Get world position and direction of crosshairs
+	bool bScreenToWorld = UGameplayStatics::DeprojectScreenToWorld(
+		UGameplayStatics::GetPlayerController(this, 0),
+		CrosshairLocation,
+		CrosshairWorldPosition,
+		CrosshairWorldDirection);
+
+	if (bScreenToWorld) // was deprojection successful?
+	{
+		FHitResult ScreenTraceHit;
+		const FVector Start{ CrosshairWorldPosition };
+		const FVector End{ CrosshairWorldPosition + CrosshairWorldDirection * 50'000.f };
+
+		// Set beam end point to line trace end point
+		OutBeamLocation = End;
+
+		// Trace outward from crosshairs world location
+		GetWorld()->LineTraceSingleByChannel(
+			ScreenTraceHit,
+			Start,
+			End,
+			ECollisionChannel::ECC_Visibility);
+		if (ScreenTraceHit.bBlockingHit) // was there a trace hit?
+		{
+			// Beam end point is now trace hit location
+			OutBeamLocation = ScreenTraceHit.Location;
+		}
+
+		// Perform a second trace, this time from the gun barrel
+		FHitResult WeaponTraceHit;
+		const FVector WeaponTraceStart{ MuzzleSocketLocation };
+		const FVector WeaponTraceEnd{ OutBeamLocation };
+		GetWorld()->LineTraceSingleByChannel(
+			WeaponTraceHit,
+			WeaponTraceStart,
+			WeaponTraceEnd,
+			ECollisionChannel::ECC_Visibility);
+		if (WeaponTraceHit.bBlockingHit) // object between barrel and BeamEndPoint?
+		{
+			OutBeamLocation = WeaponTraceHit.Location;
+		}
+		return true;
+	}
+	return false;
+}
 
 
