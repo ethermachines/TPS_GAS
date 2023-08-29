@@ -3,6 +3,7 @@
 
 #include "TPSAnimInstance.h"
 #include "TPS_GASCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 void UTPSAnimInstance::UpdateAnimationProperties(float Delta)
@@ -23,6 +24,19 @@ void UTPSAnimInstance::UpdateAnimationProperties(float Delta)
 			bIsAccelerating = true;
 		else
 			bIsAccelerating = false;
+
+		bIsAiming = PlayerCharacter->GetAiming();
+
+		FRotator AimRotation = PlayerCharacter->GetActorRotation();
+
+		MovementOffsetYaw = CalculateDirection(Velocity, AimRotation);
+		
+
+		/*FRotator AimRotation = PlayerCharacter->GetBaseAimRotation();
+		FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(PlayerCharacter->GetVelocity());
+		MovementOffsetYaw = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation).Yaw;*/
+
+
 	}
 
 }

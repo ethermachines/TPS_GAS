@@ -86,7 +86,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float ZoomInterpSpeed;
 
-	void CameraInterpZoom(float DeltaTime);
+	void OnAim(float DeltaTime);
+
+	void RotateCharacterOnAim();
 			
 protected:
 	// APawn interface
@@ -117,5 +119,7 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	FORCEINLINE bool GetAiming() const { return bAiming; }
 };
 

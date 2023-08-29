@@ -37,7 +37,7 @@ ATPS_GASCharacter::ATPS_GASCharacter()
 	// instead of recompiling to adjust them
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
+	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
@@ -53,7 +53,7 @@ ATPS_GASCharacter::ATPS_GASCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	CameraDefaultFOV = 0.0f;
-	CameraZoomedFOV = 50.0f;
+	CameraZoomedFOV = 90.0f;
 	CameraCurrentFOV = 0.f;
 	ZoomInterpSpeed = 20.f;
 
@@ -117,7 +117,7 @@ void ATPS_GASCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//Interpolate FOV when Aiming
-	CameraInterpZoom(DeltaTime);
+	OnAim(DeltaTime);
 }
 
 
@@ -167,9 +167,9 @@ void ATPS_GASCharacter::AimingButtonReleased()
 	bAiming = false;
 }
 
-void ATPS_GASCharacter::CameraInterpZoom(float DeltaTime)
+void ATPS_GASCharacter::OnAim(float DeltaTime)
 {
-	// Set current camera field of view
+	//aiming 
 	if (bAiming)
 	{
 		// Interpolate to zoomed FOV
@@ -178,6 +178,12 @@ void ATPS_GASCharacter::CameraInterpZoom(float DeltaTime)
 			CameraZoomedFOV,
 			DeltaTime,
 			ZoomInterpSpeed);
+
+		//Lock player rotation to camera orientation
+		bUseControllerRotationYaw = true;
+
+		//Reduce player speed
+		GetCharacterMovement()->MaxWalkSpeed = 250.f;
 	}
 	else
 	{
@@ -187,6 +193,10 @@ void ATPS_GASCharacter::CameraInterpZoom(float DeltaTime)
 			CameraDefaultFOV,
 			DeltaTime,
 			ZoomInterpSpeed);
+
+		bUseControllerRotationYaw = false;
+
+		GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	}
 	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV);
 }
