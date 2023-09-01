@@ -53,7 +53,7 @@ ATPS_GASCharacter::ATPS_GASCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	CameraDefaultFOV = 0.0f;
-	CameraZoomedFOV = 90.0f;
+	CameraZoomedFOV = 60.0f;
 	CameraCurrentFOV = 0.f;
 	ZoomInterpSpeed = 20.f;
 

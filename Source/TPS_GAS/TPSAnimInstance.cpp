@@ -29,7 +29,13 @@ void UTPSAnimInstance::UpdateAnimationProperties(float Delta)
 
 		FRotator AimRotation = PlayerCharacter->GetActorRotation();
 
-		MovementOffsetYaw = CalculateDirection(Velocity, AimRotation);
+		Direction = CalculateDirection(Velocity, AimRotation);
+
+		const FVector AimDirWS = PlayerCharacter->GetBaseAimRotation().Vector();
+		const FVector AimDirLS = PlayerCharacter->ActorToWorld().InverseTransformVectorNoScale(AimDirWS);
+		const FRotator AimRotLS = AimDirLS.Rotation();
+
+		AimOffset = AimRotLS.Pitch;
 		
 
 		/*FRotator AimRotation = PlayerCharacter->GetBaseAimRotation();

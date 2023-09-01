@@ -38,6 +38,9 @@ private:
 	bool bIsAiming;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	float MovementOffsetYaw;
+	float Direction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float AimOffset;
 	
 };
