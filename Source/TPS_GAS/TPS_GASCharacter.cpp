@@ -57,6 +57,9 @@ ATPS_GASCharacter::ATPS_GASCharacter()
 	CameraCurrentFOV = 0.f;
 	ZoomInterpSpeed = 20.f;
 
+	bIsFiring = false;
+	bFireButtonPressed = false;
+
 }
 
 void ATPS_GASCharacter::BeginPlay()
@@ -102,7 +105,8 @@ void ATPS_GASCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATPS_GASCharacter::Look);
 
 		//Firing
-		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATPS_GASCharacter::FireWeapon);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATPS_GASCharacter::FireButtonPressed);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &ATPS_GASCharacter::FireButtonReleased);
 
 		//Aiming
 		EnhancedInputComponent->BindAction(AimingAction, ETriggerEvent::Triggered, this, &ATPS_GASCharacter::AimingButtonPressed);
@@ -223,11 +227,22 @@ void ATPS_GASCharacter::SpawnDefaultWeapon()
 
 
 
+void ATPS_GASCharacter::FireButtonPressed()
+{
+	bFireButtonPressed = true;
+}
+
+void ATPS_GASCharacter::FireButtonReleased()
+{
+	bFireButtonPressed = false;
+}
+
 void ATPS_GASCharacter::FireWeapon()
 {
 	const USkeletalMeshSocket* BarrelSocket = GetMesh()->GetSocketByName("BarrelSocket");
 	if (BarrelSocket)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Firing"));
 		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
 		FVector BeamEnd;
 
@@ -235,7 +250,7 @@ void ATPS_GASCharacter::FireWeapon()
 
 		if (bBeamEnd)
 		{
-
+			//UE_LOG(LogTemp, Warning, TEXT("Firing"));
 		}
 
 	}

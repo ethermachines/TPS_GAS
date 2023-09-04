@@ -55,12 +55,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* FireAction;
 
+	void FireButtonPressed();
+	void FireButtonReleased();
+
+	bool bFireButtonPressed;
+
 	void FireWeapon();
+
+	bool bIsFiring;
 
 	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
 
-	//particles and sound
 
+	//particles, sounds and animations
+
+	void PlayFireMontage(bool bAiming);
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
@@ -87,8 +96,6 @@ protected:
 	float ZoomInterpSpeed;
 
 	void OnAim(float DeltaTime);
-
-	void RotateCharacterOnAim();
 			
 protected:
 	// APawn interface

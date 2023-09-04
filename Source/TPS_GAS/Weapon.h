@@ -9,9 +9,10 @@
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
 {
-	EWS_Initial UMETA(DisplayName = "Initial State"),
+	EWS_Idle UMETA(DisplayName = "Idle State"),
 	EWS_Equipped UMETA(DisplayName = "Equipped"),
 	EWS_Dropped UMETA(DisplayName = "Dropped"),
+	EWS_Reloading UMETA(DisplayName = "Reloading"),
 
 	EWS_MAX UMETA(DisplayName = "DefaultMAX")
 };
@@ -35,6 +36,22 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+
+	//Weapon Fire Logic
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float BulletsPerMinute;
+
+	/*void StartFire();
+
+	void StopFire();
+
+	bool CanFire() const;*/
+
+	//virtual void FireWeapon() PURE_VIRTUAL(AWeapon::FireWeapon, );
+
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USkeletalMeshComponent* WeaponMesh;
@@ -44,5 +61,49 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	EWeaponState WeaponState;
+
+	EWeaponState CurrentState;
+
+	void SetWeaponState(EWeaponState NewState);
+
+	/*void DetermineWeaponState();
+
+	virtual void HandleFiring();*/
+
+	bool bWantsToFire;
+
+	float LastFireTime;
+
+	/* Time between shots for repeating fire */
+	float TimeBetweenShots;
+
+	//Effects
+
+	/*UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* FireSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* EquipSound;*/
+
+	UPROPERTY(EditDefaultsOnly)
+	UParticleSystem* MuzzleFX;
+
+	UPROPERTY(EditDefaultsOnly)
+	UAnimMontage* EquipAnim;
+
+	UPROPERTY(EditDefaultsOnly)
+	UAnimMontage* FireAnim;
+
+	UPROPERTY(Transient)
+	UParticleSystemComponent* MuzzleEffect;
+
+	UPROPERTY(EditDefaultsOnly)
+	FName MuzzleAttachPoint;
+
+	bool bPlayingFireAnim;
+
+public:
+
+	FORCEINLINE EWeaponState GetCurrentState() const { return CurrentState; }
 
 };
