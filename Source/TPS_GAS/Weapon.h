@@ -17,6 +17,16 @@ enum class EWeaponState : uint8
 	EWS_MAX UMETA(DisplayName = "DefaultMAX")
 };
 
+UENUM(BlueprintType)
+enum class EFireType : uint8
+{
+	EFT_HitScan UMETA(DisplayName = "Hit Scan Weapon"),
+	EFT_Projectile UMETA(DisplayName = "Projectile Weapon"),
+	EFT_Shotgun UMETA(DisplayName = "Shotgun Weapon"),
+
+	EFT_MAX UMETA(DisplayName = "DefaultMAX")
+};
+
 class USphereComponent;
 
 UCLASS()
@@ -102,8 +112,12 @@ private:
 
 	bool bPlayingFireAnim;
 
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float FireDelay = .15f;
+
 public:
 
 	FORCEINLINE EWeaponState GetCurrentState() const { return CurrentState; }
+	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
 
 };

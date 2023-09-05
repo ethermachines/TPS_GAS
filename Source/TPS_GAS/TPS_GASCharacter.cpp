@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Weapon.h"
+#include "CombatComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
@@ -223,6 +224,12 @@ void ATPS_GASCharacter::SpawnDefaultWeapon()
 
 		EquippedWeapon = DefaultWeapon;
 	}
+}
+
+AWeapon* ATPS_GASCharacter::GetEquippedWeapon()
+{
+	if (Combat == nullptr) return nullptr;
+	return Combat->EquippedWeapon;
 }
 
 

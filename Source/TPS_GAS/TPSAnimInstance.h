@@ -7,6 +7,7 @@
 #include "TPSAnimInstance.generated.h"
 
 class ATPS_GASCharacter;
+class AWeapon;
 
 UCLASS()
 class TPS_GAS_API UTPSAnimInstance : public UAnimInstance
@@ -42,5 +43,14 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float AimOffset;
+	
+	//IK hands on weapon
+
+	AWeapon* EquippedWeapon;
+
+	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	FTransform LeftHandTransform;
+
+public:
 	
 };
