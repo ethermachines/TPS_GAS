@@ -74,8 +74,6 @@ private:
 
 	EWeaponState CurrentState;
 
-	void SetWeaponState(EWeaponState NewState);
-
 	/*void DetermineWeaponState();
 
 	virtual void HandleFiring();*/
@@ -118,6 +116,7 @@ private:
 public:
 
 	FORCEINLINE EWeaponState GetCurrentState() const { return CurrentState; }
+	FORCEINLINE void SetWeaponState(EWeaponState State) { CurrentState = State; }
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
 
 };

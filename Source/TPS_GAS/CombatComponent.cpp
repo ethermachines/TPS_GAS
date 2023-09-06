@@ -100,6 +100,10 @@ void UCombatComponent::Fire()
 
 void UCombatComponent::FireHitScanWeapon()
 {
+
+	//Local client fire
+
+
 	if (EquippedWeapon && Player)
 	{
 		//HitTarget = EquippedWeapon->bUseScatter ? EquippedWeapon->TraceEndWithScatter(HitTarget) : HitTarget;
@@ -108,4 +112,5 @@ void UCombatComponent::FireHitScanWeapon()
 
 void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 {
+
 }

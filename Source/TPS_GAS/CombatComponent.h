@@ -20,13 +20,6 @@ public:
 
 	friend class ATPS_GASCharacter;
 
-	void SetAiming(bool bIsAiming);
-
-	void FireButtonPressed(bool bPressed);
-	void Fire();
-	void FireHitScanWeapon();
-
-	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 
 protected:
 	// Called when the game starts
@@ -55,9 +48,20 @@ private:
 
 	bool CanFire();
 
+	void SetAiming(bool bIsAiming);
+
+	void Fire();
+	void FireHitScanWeapon();
+
+	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
+
 	//Aiming stuff possibly
 	/*bool bAiming = false;
 	bool bAimButtonPressed = false;*/
+
+protected:
+
+	void FireButtonPressed(bool bPressed);
 
 		
 };

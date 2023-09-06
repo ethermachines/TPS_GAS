@@ -45,9 +45,3 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
-void AWeapon::SetWeaponState(EWeaponState NewState)
-{
-	WeaponState = NewState;
-
-}
-

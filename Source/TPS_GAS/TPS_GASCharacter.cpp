@@ -14,6 +14,7 @@
 #include "CombatComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "TPSAnimInstance.h"
 #include "Sound/SoundCue.h"
 
 
@@ -58,8 +59,12 @@ ATPS_GASCharacter::ATPS_GASCharacter()
 	CameraCurrentFOV = 0.f;
 	ZoomInterpSpeed = 20.f;
 
-	bIsFiring = false;
+	//bIsFiring = false;
 	bFireButtonPressed = false;
+
+	//Combat Component Properties
+
+	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 
 }
 
@@ -117,6 +122,15 @@ void ATPS_GASCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 
 }
 
+void ATPS_GASCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if (Combat)
+	{
+		Combat->Player = this;
+	}
+}
+
 void ATPS_GASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -164,18 +178,18 @@ void ATPS_GASCharacter::Look(const FInputActionValue& Value)
 
 void ATPS_GASCharacter::AimingButtonPressed()
 {
-	bAiming = true;
+	bIsAiming = true;
 }
 
 void ATPS_GASCharacter::AimingButtonReleased()
 {
-	bAiming = false;
+	bIsAiming = false;
 }
 
 void ATPS_GASCharacter::OnAim(float DeltaTime)
 {
 	//aiming 
-	if (bAiming)
+	if (bIsAiming)
 	{
 		// Interpolate to zoomed FOV
 		CameraCurrentFOV = FMath::FInterpTo(
@@ -236,12 +250,20 @@ AWeapon* ATPS_GASCharacter::GetEquippedWeapon()
 
 void ATPS_GASCharacter::FireButtonPressed()
 {
-	bFireButtonPressed = true;
+	bIsFiring = true;
+	/*if (Combat)
+	{
+		Combat->FireButtonPressed(true);
+	}*/
 }
 
 void ATPS_GASCharacter::FireButtonReleased()
 {
-	bFireButtonPressed = false;
+	bIsFiring = false;
+	/*if (Combat)
+	{
+		Combat->FireButtonPressed(false);
+	}*/
 }
 
 void ATPS_GASCharacter::FireWeapon()
@@ -319,9 +341,24 @@ bool ATPS_GASCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
 		{
 			OutBeamLocation = WeaponTraceHit.Location;
 		}
+		else
+		{
+			DrawDebugSphere(GetWorld(), WeaponTraceHit.Location, 12.f, 12, FColor::Red);
+		}
 		return true;
 	}
 	return false;
+}
+
+void ATPS_GASCharacter::PlayFireMontage(bool bAiming)
+{
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && FireWeaponMontage)
+	{
+		AnimInstance->Montage_Play(FireWeaponMontage);
+	}
 }
 
 

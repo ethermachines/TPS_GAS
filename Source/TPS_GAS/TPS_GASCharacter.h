@@ -9,6 +9,7 @@
 class AWeapon;
 class UInputAction;
 class UCombatComponent;
+class UAnimMontage;
 
 UCLASS(config=Game)
 class ATPS_GASCharacter : public ACharacter
@@ -41,6 +42,7 @@ class ATPS_GASCharacter : public ACharacter
 
 public:
 	ATPS_GASCharacter();
+
 	
 
 protected:
@@ -63,6 +65,7 @@ protected:
 
 	void FireWeapon();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	bool bIsFiring;
 
 	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
@@ -72,9 +75,11 @@ protected:
 
 	void PlayFireMontage(bool bAiming);
 
+	UPROPERTY(EditAnywhere, Category = Combat)
+	UAnimMontage* FireWeaponMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	bool bAiming;
+	bool bIsAiming;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AimingAction;
@@ -107,6 +112,8 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void PostInitializeComponents() override;
+
 protected:
 
 	//Spawn weapon in right hand socket
@@ -131,7 +138,8 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	FORCEINLINE bool GetAiming() const { return bAiming; }
+	FORCEINLINE bool GetAiming() const { return bIsAiming; }
+	FORCEINLINE bool GetFiring() const { return bIsFiring; }
 
 	AWeapon* GetEquippedWeapon();
 };

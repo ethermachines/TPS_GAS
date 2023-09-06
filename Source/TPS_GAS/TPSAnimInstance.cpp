@@ -27,6 +27,7 @@ void UTPSAnimInstance::UpdateAnimationProperties(float Delta)
 			bIsAccelerating = false;
 
 		bIsAiming = PlayerCharacter->GetAiming();
+		bIsFiring = PlayerCharacter->GetFiring();
 
 		FRotator AimRotation = PlayerCharacter->GetActorRotation();
 
@@ -45,7 +46,7 @@ void UTPSAnimInstance::UpdateAnimationProperties(float Delta)
 		FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(PlayerCharacter->GetVelocity());
 		MovementOffsetYaw = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation).Yaw;*/
 
-		//if weapon is equipped
+		//IK for holding weapon
 		if (EquippedWeapon && EquippedWeapon->GetWeaponMesh() && PlayerCharacter->GetMesh())
 		{
 			LeftHandTransform = EquippedWeapon->GetWeaponMesh()->GetSocketTransform(FName("LeftHandSocket"), ERelativeTransformSpace::RTS_World);
