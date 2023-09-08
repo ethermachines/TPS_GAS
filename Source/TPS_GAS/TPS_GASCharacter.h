@@ -73,8 +73,6 @@ protected:
 
 	//particles, sounds and animations
 
-	void PlayFireMontage(bool bAiming);
-
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* FireWeaponMontage;
 
@@ -142,5 +140,7 @@ public:
 	FORCEINLINE bool GetFiring() const { return bIsFiring; }
 
 	AWeapon* GetEquippedWeapon();
+
+	void PlayFireMontage(bool bAiming);
 };
 

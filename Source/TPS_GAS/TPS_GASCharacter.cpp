@@ -242,8 +242,9 @@ void ATPS_GASCharacter::SpawnDefaultWeapon()
 
 AWeapon* ATPS_GASCharacter::GetEquippedWeapon()
 {
-	if (Combat == nullptr) return nullptr;
-	return Combat->EquippedWeapon;
+	/*if (Combat == nullptr) return nullptr;
+	return Combat->EquippedWeapon;*/
+	return EquippedWeapon;
 }
 
 
@@ -251,6 +252,8 @@ AWeapon* ATPS_GASCharacter::GetEquippedWeapon()
 void ATPS_GASCharacter::FireButtonPressed()
 {
 	bIsFiring = true;
+	bUseControllerRotationYaw = true;
+	PlayFireMontage(bIsAiming);
 	/*if (Combat)
 	{
 		Combat->FireButtonPressed(true);
@@ -260,6 +263,7 @@ void ATPS_GASCharacter::FireButtonPressed()
 void ATPS_GASCharacter::FireButtonReleased()
 {
 	bIsFiring = false;
+	bUseControllerRotationYaw = false;
 	/*if (Combat)
 	{
 		Combat->FireButtonPressed(false);
@@ -352,12 +356,15 @@ bool ATPS_GASCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
 
 void ATPS_GASCharacter::PlayFireMontage(bool bAiming)
 {
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
+	//if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && FireWeaponMontage)
 	{
 		AnimInstance->Montage_Play(FireWeaponMontage);
+		FName SectionName;
+		SectionName = bAiming ? FName("RifleAim") : FName("RifleHip");
+		AnimInstance->Montage_JumpToSection(SectionName);
 	}
 }
 
