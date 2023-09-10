@@ -257,7 +257,6 @@ void ATPS_GASCharacter::FireButtonPressed()
 		Combat->FireButtonPressed(true);
 
 	bUseControllerRotationYaw = true;
-	PlayFireMontage(bIsAiming);
 	//FireWeapon();
 	/*if (Combat)
 	{
@@ -273,10 +272,6 @@ void ATPS_GASCharacter::FireButtonReleased()
 		Combat->FireButtonPressed(false);
 
 	bUseControllerRotationYaw = false;
-	/*if (Combat)
-	{
-		Combat->FireButtonPressed(false);
-	}*/
 }
 
 //void ATPS_GASCharacter::FireWeapon()
@@ -362,20 +357,5 @@ void ATPS_GASCharacter::FireButtonReleased()
 //	}
 //	return false;
 //}
-
-void ATPS_GASCharacter::PlayFireMontage(bool bAiming)
-{
-	//if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
-	if (Combat == nullptr) return;
-
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && FireWeaponMontage)
-	{
-		AnimInstance->Montage_Play(FireWeaponMontage);
-		FName SectionName;
-		SectionName = bAiming ? FName("RifleAim") : FName("RifleHip");
-		AnimInstance->Montage_JumpToSection(SectionName);
-	}
-}
 
 

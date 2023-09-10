@@ -140,7 +140,5 @@ public:
 	FORCEINLINE bool GetFiring() const { return bIsFiring; }
 
 	AWeapon* GetEquippedWeapon();
-
-	void PlayFireMontage(bool bAiming);
 };
 
