@@ -65,9 +65,9 @@ bool UCombatComponent::CanFire()
 void UCombatComponent::FireButtonPressed(bool bPressed)
 {
 	bFireButtonPressed = bPressed;
-	if (bFireButtonPressed)
+	if (Player && bFireButtonPressed)
 	{
-		Fire();
+		//Player->PlayFireMontage(bAiming);
 	}
 }
 

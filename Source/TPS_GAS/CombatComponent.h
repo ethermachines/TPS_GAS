@@ -56,8 +56,8 @@ private:
 	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 
 	//Aiming stuff possibly
-	/*bool bAiming = false;
-	bool bAimButtonPressed = false;*/
+	bool bAiming = false;
+	bool bAimButtonPressed = false;
 
 protected:
 
