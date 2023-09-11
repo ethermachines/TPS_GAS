@@ -24,6 +24,12 @@ void UCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//if (Player)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Got Weapon"));
+	//	//EquippedWeapon = Player->GetEquippedWeapon();
+	//}
+
 	// ...
 	
 }
@@ -38,9 +44,15 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	{
 		FHitResult HitResult;
 		TraceUnderCrosshairs(HitResult);
-		//HitTarget = HitResult.ImpactPoint;
+		HitTarget = HitResult.ImpactPoint;
 	}
 
+}
+
+void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
+{
+	EquippedWeapon = WeaponToEquip;
+	//EquippedWeapon->SetOwner(Player);
 }
 
 void UCombatComponent::StartFireTimer()
@@ -60,7 +72,7 @@ void UCombatComponent::FireTimerFinished()
 
 bool UCombatComponent::CanFire()
 {
-	return false;
+	return true;
 }
 
 
@@ -69,46 +81,54 @@ void UCombatComponent::FireButtonPressed(bool bPressed)
 	bFireButtonPressed = bPressed;
 	if (Player && bFireButtonPressed)
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("In FirePress (Combat comp)"));
 		//Player->PlayFireMontage(bAiming);
+		FireHitScanWeapon(HitTarget);
 	}
 }
 
 void UCombatComponent::Fire()
 {
-	if (CanFire())
-	{
-		bCanFire = false;
-		if (EquippedWeapon)
-		{
-			//CrosshairShootingFactor = .75f;
 
-			FireHitScanWeapon();
-			/*switch (EquippedWeapon->FireType)
-			{
-			case EFireType::EFT_Projectile:
-				FireProjectileWeapon();
-				break;
-			case EFireType::EFT_HitScan:
-				FireHitScanWeapon();
-				break;
-			case EFireType::EFT_Shotgun:
-				FireShotgun();
-				break;
-			}*/
-		}
-		StartFireTimer();
-	}
+	//FireHitScanWeapon(TraceHit);
+
+	//if (CanFire())
+	//{
+	//	bCanFire = false;
+	//	if (EquippedWeapon)
+	//	{
+	//		//CrosshairShootingFactor = .75f;
+
+	//		FireHitScanWeapon();
+	//		/*switch (EquippedWeapon->FireType)
+	//		{
+	//		case EFireType::EFT_Projectile:
+	//			FireProjectileWeapon();
+	//			break;
+	//		case EFireType::EFT_HitScan:
+	//			FireHitScanWeapon();
+	//			break;
+	//		case EFireType::EFT_Shotgun:
+	//			FireShotgun();
+	//			break;
+	//		}*/
+	//	}
+	//	StartFireTimer();
+	//}
 }
 
-void UCombatComponent::FireHitScanWeapon()
+void UCombatComponent::FireHitScanWeapon(FVector& TraceHitLine)
 {
 
 	//Local client fire
 
+	//UE_LOG(LogTemp, Warning, TEXT("In FireHitScan before Equipped Check"));
 
 	if (EquippedWeapon && Player)
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("In FireHitScan before Equipped fire"));
 		//HitTarget = EquippedWeapon->bUseScatter ? EquippedWeapon->TraceEndWithScatter(HitTarget) : HitTarget;
+		EquippedWeapon->Fire(TraceHitLine);
 	}
 }
 

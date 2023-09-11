@@ -236,15 +236,16 @@ void ATPS_GASCharacter::SpawnDefaultWeapon()
 			HandSocket->AttachActor(DefaultWeapon, GetMesh());
 		}
 
-		EquippedWeapon = DefaultWeapon;
+		Combat->EquipWeapon(DefaultWeapon);
+		UE_LOG(LogTemp, Warning, TEXT("EquipWeapon on default"));
 	}
 }
 
 AWeapon* ATPS_GASCharacter::GetEquippedWeapon()
 {
-	/*if (Combat == nullptr) return nullptr;
-	return Combat->EquippedWeapon;*/
-	return EquippedWeapon;
+	if (Combat == nullptr) return nullptr;
+	return Combat->EquippedWeapon;
+	//return EquippedWeapon;
 }
 
 

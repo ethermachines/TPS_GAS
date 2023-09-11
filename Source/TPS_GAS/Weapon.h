@@ -59,7 +59,8 @@ protected:
 
 	bool CanFire() const;*/
 
-	//virtual void FireWeapon() PURE_VIRTUAL(AWeapon::FireWeapon, );
+public:
+	virtual void Fire(const FVector& HitTarget);
 
 
 private:

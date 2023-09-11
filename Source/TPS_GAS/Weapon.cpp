@@ -45,3 +45,9 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
+void AWeapon::Fire(const FVector& HitTarget)
+{
+	//spend ammo
+	//UE_LOG(LogTemp, Warning, TEXT("Weapon Fire"));
+}
+

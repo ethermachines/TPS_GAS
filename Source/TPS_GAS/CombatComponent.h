@@ -36,6 +36,8 @@ private:
 
 	AWeapon* EquippedWeapon;
 
+	void EquipWeapon(AWeapon* WeaponToEquip);
+
 	FVector HitTarget;
 
 	bool bFireButtonPressed;
@@ -51,13 +53,15 @@ private:
 	void SetAiming(bool bIsAiming);
 
 	void Fire();
-	void FireHitScanWeapon();
+	void FireHitScanWeapon(FVector& TraceHitLine);
 
 	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 
 	//Aiming stuff possibly
 	bool bAiming = false;
 	bool bAimButtonPressed = false;
+
+	FVector TraceHit;
 
 protected:
 
