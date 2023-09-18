@@ -4,6 +4,7 @@
 #include "TPSAnimInstance.h"
 #include "TPS_GASCharacter.h"
 #include "Weapon.h"
+#include "CombatComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -11,6 +12,7 @@ void UTPSAnimInstance::UpdateAnimationProperties(float Delta)
 {
 	if (PlayerCharacter)
 		PlayerCharacter = Cast<ATPS_GASCharacter>(TryGetPawnOwner());
+	
 
 	//Retrieve and assign character velocity magnitude to speed;
 	if (PlayerCharacter)
@@ -27,6 +29,7 @@ void UTPSAnimInstance::UpdateAnimationProperties(float Delta)
 			bIsAccelerating = false;
 
 		bIsAiming = PlayerCharacter->GetAiming();
+
 		bIsFiring = PlayerCharacter->GetFiring();
 
 		FRotator AimRotation = PlayerCharacter->GetActorRotation();

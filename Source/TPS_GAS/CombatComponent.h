@@ -38,8 +38,7 @@ private:
 
 	void EquipWeapon(AWeapon* WeaponToEquip);
 
-	FVector HitTarget;
-
+	//Firing Logic
 	bool bFireButtonPressed;
 
 	FTimerHandle FireTimer;
@@ -47,25 +46,25 @@ private:
 
 	void StartFireTimer();
 	void FireTimerFinished();
-
 	bool CanFire();
-
-	void SetAiming(bool bIsAiming);
-
 	void Fire();
 	void FireHitScanWeapon(FVector& TraceHitLine);
+	FVector TraceHit;
+	FVector HitTarget;
 
 	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 
-	//Aiming stuff possibly
-	bool bAiming = false;
-	bool bAimButtonPressed = false;
+	//Aiming logic
+	//bool bAiming = false;
+	bool bAimButtonPressed;
 
-	FVector TraceHit;
 
 protected:
 
 	void FireButtonPressed(bool bPressed);
+	void AimButtonPressed(bool bIsAiming);
 
-		
+public:
+
+	FORCEINLINE bool GetAiming() const { return bAimButtonPressed; }
 };

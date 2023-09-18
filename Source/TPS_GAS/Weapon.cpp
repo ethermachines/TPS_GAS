@@ -52,8 +52,7 @@ void AWeapon::Tick(float DeltaTime)
 void AWeapon::Fire(const FVector& HitTarget)
 {
 	//spend ammo
-	UE_LOG(LogTemp, Warning, TEXT("Weapon Fire"));
-	//UE_LOG(LogTemp, Warning, TEXT("Hitscan Fire"));
+	//UE_LOG(LogTemp, Warning, TEXT("Weapon Fire"));
 
 	/*APawn* OwnerPawn = Cast<APawn>(GetOwner());
 	if (OwnerPawn == nullptr) return;

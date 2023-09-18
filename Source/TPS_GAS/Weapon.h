@@ -106,8 +106,8 @@ private:
 	UPROPERTY(Transient)
 	UParticleSystemComponent* MuzzleEffect;
 
-	UPROPERTY(EditAnywhere)
-	UParticleSystem* ImpactParticles;
+	/*UPROPERTY(EditAnywhere)
+	UParticleSystem* ImpactParticles;*/
 
 	UPROPERTY(EditDefaultsOnly)
 	FName MuzzleAttachPoint;

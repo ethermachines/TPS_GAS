@@ -52,7 +52,7 @@ private:
 	AWeapon* EquippedWeapon;
 
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	FTransform LeftHandTransform;
+	FTransform LeftHandTransform;;
 
 public:
 	

@@ -176,16 +176,6 @@ void ATPS_GASCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void ATPS_GASCharacter::AimingButtonPressed()
-{
-	bIsAiming = true;
-}
-
-void ATPS_GASCharacter::AimingButtonReleased()
-{
-	bIsAiming = false;
-}
-
 void ATPS_GASCharacter::OnAim(float DeltaTime)
 {
 	//aiming 
@@ -273,6 +263,27 @@ void ATPS_GASCharacter::FireButtonReleased()
 		Combat->FireButtonPressed(false);
 
 	bUseControllerRotationYaw = false;
+}
+
+void ATPS_GASCharacter::AimingButtonPressed()
+{
+	bIsAiming = true;
+
+	if (Combat)
+		Combat->AimButtonPressed(true);
+}
+
+void ATPS_GASCharacter::AimingButtonReleased()
+{
+	bIsAiming = false;
+
+	if (Combat)
+		Combat->AimButtonPressed(false);
+}
+
+bool ATPS_GASCharacter::GetAiming() const
+{
+	return Combat && Combat->GetAiming();
 }
 
 //void ATPS_GASCharacter::FireWeapon()

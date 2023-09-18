@@ -136,8 +136,10 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	FORCEINLINE bool GetAiming() const { return bIsAiming; }
+	bool GetAiming() const;
 	FORCEINLINE bool GetFiring() const { return bIsFiring; }
+
+	//FORCEINLINE UCombatComponent* GetCombatComp() const { return Combat; }
 
 	AWeapon* GetEquippedWeapon();
 };

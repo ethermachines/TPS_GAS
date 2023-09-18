@@ -83,8 +83,16 @@ void UCombatComponent::FireButtonPressed(bool bPressed)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("In FirePress (Combat comp)"));
 		//Player->PlayFireMontage(bAiming);
+
+
 		FireHitScanWeapon(HitTarget);
 	}
+}
+
+void UCombatComponent::AimButtonPressed(bool bIsAiming)
+{
+	if (!Player) return;
+	bAimButtonPressed = bIsAiming;
 }
 
 void UCombatComponent::Fire()
