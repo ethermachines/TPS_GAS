@@ -89,7 +89,6 @@ void UCombatComponent::FireButtonPressed(bool bPressed)
 
 void UCombatComponent::Fire()
 {
-
 	//FireHitScanWeapon(TraceHit);
 
 	//if (CanFire())
@@ -126,7 +125,6 @@ void UCombatComponent::FireHitScanWeapon(FVector& TraceHitLine)
 
 	if (EquippedWeapon && Player)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("In FireHitScan before Equipped fire"));
 		//HitTarget = EquippedWeapon->bUseScatter ? EquippedWeapon->TraceEndWithScatter(HitTarget) : HitTarget;
 		EquippedWeapon->Fire(TraceHitLine);
 	}

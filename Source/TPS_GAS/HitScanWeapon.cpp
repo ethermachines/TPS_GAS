@@ -11,16 +11,15 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 {
 	Super::Fire(HitTarget);
 
-	UE_LOG(LogTemp, Warning, TEXT("Hitscan Fire"));
+	//UE_LOG(LogTemp, Warning, TEXT("Hitscan Fire"));
 
-	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	/*APawn* OwnerPawn = Cast<APawn>(GetOwner());
 	if (OwnerPawn == nullptr) return;
-	AController* InstigatorController = OwnerPawn->GetController();
+	AController* InstigatorController = OwnerPawn->GetController();*/
 
 	const USkeletalMeshSocket* MuzzleFlashSocket = GetWeaponMesh()->GetSocketByName("MuzzleFlash");
-	if (MuzzleFlashSocket && InstigatorController)
+	if (MuzzleFlashSocket) //&& InstigatorController
 	{
-		UE_LOG(LogTemp, Warning, TEXT("In Muzzle Mesh and Controller"));
 		FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
 		FVector Start = SocketTransform.GetLocation();
 		FVector End = Start + (HitTarget - Start) * 1.25f;
@@ -29,19 +28,18 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		UWorld* World = GetWorld();
 		if (World)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("In World"));
 			World->LineTraceSingleByChannel(FireHit, Start, End, ECollisionChannel::ECC_Visibility);
 		}
 
 		if (FireHit.bBlockingHit)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("In FireHit"));
 			ATPS_GASCharacter* Character = Cast<ATPS_GASCharacter>(FireHit.GetActor());
 			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
 			DrawDebugPoint(GetWorld(), FireHit.Location, 5.0f, FColor::Red, false, 2.0f);
 			if (Character)
 			{
-				UGameplayStatics::ApplyDamage(Character, Damage, InstigatorController, this, UDamageType::StaticClass());
+				//UGameplayStatics::ApplyDamage(Character, Damage, InstigatorController, this, UDamageType::StaticClass());
+				UE_LOG(LogTemp, Warning, TEXT("Apply Damage"));
 			}
 			if (ImpactParticles)
 			{
