@@ -62,6 +62,9 @@ protected:
 public:
 	virtual void Fire(const FVector& HitTarget);
 
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float FireDelay = .15f;
+
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
@@ -113,9 +116,6 @@ private:
 	FName MuzzleAttachPoint;
 
 	bool bPlayingFireAnim;
-
-	UPROPERTY(EditAnywhere, Category = Combat)
-	float FireDelay = .15f;
 
 public:
 

@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(Sandbox, Log, All);
+#define LOG(x, ...) UE_LOG(Sandbox, Log, TEXT(x), __VA_ARGS__)
+
 class ATPS_GASCharacter;
 class AWeapon;
 
@@ -40,13 +43,6 @@ private:
 
 	//Firing Logic
 	bool bFireButtonPressed;
-
-	FTimerHandle FireTimer;
-	bool bCanFire = true;
-
-	void StartFireTimer();
-	void FireTimerFinished();
-	bool CanFire();
 	void Fire();
 	void FireHitScanWeapon(FVector& TraceHitLine);
 	FVector TraceHit;
@@ -57,6 +53,16 @@ private:
 	//Aiming logic
 	//bool bAiming = false;
 	bool bAimButtonPressed;
+
+	//Fire Timer logic
+	FTimerHandle FireTimer;
+
+	void StartFireTimer();
+	void FireTimerFinished();
+
+	bool CanFire();
+	bool bCanFire = true;
+
 
 
 protected:

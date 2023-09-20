@@ -7,6 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 
+DEFINE_LOG_CATEGORY(Sandbox);
+
 // Sets default values for this component's properties
 UCombatComponent::UCombatComponent()
 {
@@ -23,15 +25,6 @@ UCombatComponent::UCombatComponent()
 void UCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//if (Player)
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Got Weapon"));
-	//	//EquippedWeapon = Player->GetEquippedWeapon();
-	//}
-
-	// ...
-	
 }
 
 
@@ -55,25 +48,7 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 	//EquippedWeapon->SetOwner(Player);
 }
 
-void UCombatComponent::StartFireTimer()
-{
-	/*if (EquippedWeapon == nullptr || Player == nullptr) return;
-	Player->GetWorldTimerManager().SetTimer(
-		FireTimer,
-		this,
-		&UCombatComponent::FireTimerFinished,
-		EquippedWeapon->FireDelay
-	);*/
-}
 
-void UCombatComponent::FireTimerFinished()
-{
-}
-
-bool UCombatComponent::CanFire()
-{
-	return true;
-}
 
 
 void UCombatComponent::FireButtonPressed(bool bPressed)
@@ -84,8 +59,9 @@ void UCombatComponent::FireButtonPressed(bool bPressed)
 		//UE_LOG(LogTemp, Warning, TEXT("In FirePress (Combat comp)"));
 		//Player->PlayFireMontage(bAiming);
 
-
-		FireHitScanWeapon(HitTarget);
+		//Call Fire();
+		//FireHitScanWeapon(HitTarget);
+		Fire();
 	}
 }
 
@@ -97,6 +73,14 @@ void UCombatComponent::AimButtonPressed(bool bIsAiming)
 
 void UCombatComponent::Fire()
 {
+
+	if (CanFire())
+	{
+		bCanFire = false;
+		FireHitScanWeapon(HitTarget);
+		StartFireTimer();
+
+	}
 	//FireHitScanWeapon(TraceHit);
 
 	//if (CanFire())
@@ -122,6 +106,36 @@ void UCombatComponent::Fire()
 	//	}
 	//	StartFireTimer();
 	//}
+}
+
+void UCombatComponent::StartFireTimer()
+{
+	if (EquippedWeapon == nullptr || Player == nullptr) return;
+	Player->GetWorldTimerManager().SetTimer(
+		FireTimer,
+		this,
+		&UCombatComponent::FireTimerFinished,
+		EquippedWeapon->FireDelay
+	);
+}
+
+void UCombatComponent::FireTimerFinished()
+{
+	if (EquippedWeapon == nullptr) return;
+	bCanFire = true;
+	if (bFireButtonPressed)
+	{
+		Fire();
+	}
+}
+
+bool UCombatComponent::CanFire()
+{
+	if (EquippedWeapon == nullptr) return false;
+	//if (bCanFire) return true;
+	//UE_LOG(LogTemp, Warning, TEXT("Can fire %s", *FString(bCanFire ? "True" : "False"));
+	//LOG("Can fire %s", *FString(bCanFire ? "True" : "False"));
+	return bCanFire;
 }
 
 void UCombatComponent::FireHitScanWeapon(FVector& TraceHitLine)
