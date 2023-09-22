@@ -2,6 +2,7 @@
 
 
 #include "Weapon.h"
+#include "Enemy.h"
 #include "Components/SphereComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "TPS_GASCharacter.h"
@@ -51,6 +52,14 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::Fire(const FVector& HitTarget)
 {
+
+	//AEnemy* HitEnemy = Cast<AEnemy>(HitTarget.GetActor());
+	//if (HitEnemy)
+	//{
+	//	UGameplayStatics::ApplyDamage(HitEnemy, Damage, GetInstigatorController(), this, UDamageType::StaticClass());
+	//	//UE_LOG(LogTemp, Warning, TEXT("Applied Damage"));
+	//}
+
 	//spend ammo
 	//UE_LOG(LogTemp, Warning, TEXT("Weapon Fire"));
 

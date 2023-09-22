@@ -63,7 +63,7 @@ public:
 	virtual void Fire(const FVector& HitTarget);
 
 	UPROPERTY(EditAnywhere, Category = Combat)
-	float FireDelay = .15f;
+	float FireDelay = .1f;
 
 
 private:

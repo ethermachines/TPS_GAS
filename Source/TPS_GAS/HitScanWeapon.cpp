@@ -6,6 +6,7 @@
 #include "TPS_GASCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "Enemy.h"
 
 void AHitScanWeapon::Fire(const FVector& HitTarget)
 {
@@ -33,13 +34,15 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 
 		if (FireHit.bBlockingHit)
 		{
-			ATPS_GASCharacter* Character = Cast<ATPS_GASCharacter>(FireHit.GetActor());
+			//ATPS_GASCharacter* Character = Cast<ATPS_GASCharacter>(FireHit.GetActor());
 			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
 			DrawDebugPoint(GetWorld(), FireHit.Location, 5.0f, FColor::Red, false, 2.0f);
-			if (Character)
+
+			AEnemy* HitEnemy = Cast<AEnemy>(FireHit.GetActor());
+			if (HitEnemy)
 			{
-				//UGameplayStatics::ApplyDamage(Character, Damage, InstigatorController, this, UDamageType::StaticClass());
-				UE_LOG(LogTemp, Warning, TEXT("Apply Damage"));
+				UGameplayStatics::ApplyDamage(HitEnemy, Damage, GetInstigatorController(), this, UDamageType::StaticClass());
+				//UE_LOG(LogTemp, Warning, TEXT("Applied Damage"));
 			}
 			if (ImpactParticles)
 			{
